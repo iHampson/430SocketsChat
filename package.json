@@ -1,0 +1,24 @@
+{
+  "name": "socketchat",
+  "version": "1.0.0",
+  "description": "Basic Socket.io based chat for first homework assignment",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "jshint ./src/",
+    "test": "echo complete",
+    "start": "node src/server.js"
+  },
+  "keywords": [
+    "socket.io",
+    "homework",
+    "beginning"
+  ],
+  "author": "Ian Hampson",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io": "^1.4.5"
+  },
+  "devDependencies" :{
+    "jshint": "^2.9.1"
+  }
+}

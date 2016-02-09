@@ -85,8 +85,8 @@ var onMsg = function(socket) {
         case '/me':
         case '/Me':
           message += socket.name;
-          for(var i =1;i<command.length;i++){
-            message += command[i];
+          for(var j =1;j<command.length;j++){
+            message += command[j];
           }
           break;
         default:

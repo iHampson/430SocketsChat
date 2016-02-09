@@ -51,14 +51,14 @@ var onJoined = function(socket) {
 };
 
 var onMsg = function(socket) {
+  var dateTime = new Date();
   socket.on('msgToServer',function(data){
     console.log(data);
-    console.log(data.msg[0]);
     if(data.msg[0] === '/'){
       var command = data.msg.split(" ");
-      console.log(command);
       var message = "";
-      var err = false;
+      var single = false;
+
 
       switch(command[0]){
         case '/r':
@@ -70,6 +70,14 @@ var onMsg = function(socket) {
             var result = (1 + Math.floor(Math.random()*parseInt(command[2])));
             message += result + " ";
           }
+          break;
+        case '/d':
+        case '/D':
+        case '/date':
+        case '/Date':
+          single = true;
+          message += "The date and the time are: \n";
+          message += dateTime.toLocaleString();
           break;
         case '/n':
         case '/N':
@@ -90,13 +98,12 @@ var onMsg = function(socket) {
           }
           break;
         default:
+          single = true;
           message = "That is an invalid command";
-          err = true;
       }
-      if(err){
+      if(single){
         socket.emit('msg', {name: 'server', msg: message});
       }else{
-        console.log(message);
         io.sockets.in('room1').emit('msg',{
           name:socket.name,
           msg:message
@@ -115,7 +122,6 @@ var onMsg = function(socket) {
 
 var onDisconnect = function(socket) {
   socket.on("disconnect", function(data){
-    console.log("disconnected\n",socket.name);
     delete users[socket.name];
   });
 };

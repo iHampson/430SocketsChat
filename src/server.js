@@ -51,11 +51,11 @@ var onJoined = function(socket) {
 };
 
 var onMsg = function(socket) {
-  var dateTime = new Date();
   socket.on('msgToServer',function(data){
     console.log(data);
     if(data.msg[0] === '/'){
       var command = data.msg.split(" ");
+      var dateTime = new Date();
       var message = "";
       var single = false;
 

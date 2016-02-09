@@ -4,9 +4,14 @@
   "description": "Basic Socket.io based chat for first homework assignment",
   "main": "index.js",
   "scripts": {
-    "pretest": "jshint ./src/",
-    "test": "echo complete",
+    "pretest": "jshint clientTest.js",
+    "test": "jshint ./src/",
+    "posttest": "echo complete",
     "start": "node src/server.js"
+  },
+  "repository":{
+    "type" : "git",
+    "url" : "https://github.com/iHampson/430SocketChat.git"
   },
   "keywords": [
     "socket.io",

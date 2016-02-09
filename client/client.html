@@ -11,54 +11,54 @@
          You can disable that on the server if desired -->
     <script>
 
-      function connectSocket(e){
-          var message = document.querySelector("#message");
-          var chat = document.querySelector("#chat");
-          var send = document.querySelector("#send");
-          var socket = io.connect();
+    function connectSocket(e){
+        var message = document.querySelector("#message");
+        var chat = document.querySelector("#chat");
+        var send = document.querySelector("#send");
+        var socket = io.connect();
 
-          // Clear the chat
-          chat.value = null;
+        // Clear the chat
+        chat.value = null;
 
-          socket.on('connect', function(){
-            console.log('Connecting');
+        socket.on('connect', function(){
+          console.log('Connecting');
 
-            var userName = document.querySelector("#username").value;
+          var userName = document.querySelector("#username").value;
 
-            if(!userName){
-              userName = "unknown";
-            }
+          if(!userName){
+            userName = "unknown";
+          }
 
-            socket.emit('join',{name:userName});
-          });
+          socket.emit('join',{name:userName});
+        });
 
-          socket.on('msg',function(data){
-            console.log(data);
-            chat.value += data.name + ": ";
-            chat.value += data.msg + "\n";
-          });
+        socket.on('msg',function(data){
+          console.log(data);
+          // chat.value += data.name + ": ";
+          chat.value += data.msg + "\n";
+        });
 
-          socket.on('msgToClient', function(data){
-            //prints out the message in the 'chat' window.
-            var bubble = document.createElement("div");
-            bubble.innerHTML = data.msg;
-            chat.appendChild(bubble);
-          });
+        // socket.on('msgToClient', function(data){
+        //   //prints out the message in the 'chat' window.
+        //   var bubble = document.createElement("div");
+        //   bubble.innerHTML = data.msg;
+        //   chat.appendChild(bubble);
+        // });
 
-          send.addEventListener('click', function(){
-            socket.emit('msgToServer', {msg: message.value});
-          });
+        send.addEventListener('click', function(){
+          socket.emit('msgToServer', {msg: message.value});
+        });
 
 
-      }
+    }
 
-      function init(){
-        var connect = document.querySelector("#connect");
-        connect.addEventListener('click', connectSocket);
-        document.querySelector("#chat").value = "Please enter a username.";
-      }
+    function init(){
+      var connect = document.querySelector("#connect");
+      connect.addEventListener('click', connectSocket);
+      document.querySelector("#chat").value = "Please enter a username.";
+    }
 
-      window.onload = init;
+    window.onload = init;
     </script>
 	<style>
 		textarea {

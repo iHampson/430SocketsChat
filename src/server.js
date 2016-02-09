@@ -38,7 +38,7 @@ var onJoined = function(socket) {
 
     socket.join('room1');
     // updates the count of active users
-    users[data.name] = true;
+    users[data.name] = socket.name;
 
     socket.broadcast.to('room1').emit('msg',{
       name:'server',
@@ -95,6 +95,15 @@ var onMsg = function(socket) {
           message += socket.name;
           for(var j =1;j<command.length;j++){
             message += command[j];
+          }
+          break;
+        case '/u':
+        case '/U':
+        case '/user':
+        case '/User':
+          single = true;
+          for(var key in users){
+            message += `${users[key]} `;
           }
           break;
         default:

@@ -1,0 +1,8 @@
+{
+  "undef": true,
+  "eqeqeq": true,
+  "esversion": 6,
+  "browser": true,
+  "devel": true,
+  "node": true
+}

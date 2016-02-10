@@ -57,15 +57,16 @@ var onMsg = function(socket) {
       var command = data.msg.split(" ");
       var dateTime = new Date();
       var message = "";
-      var single = false;
-
+      var self = false;
+      var other = false;
 
       switch(command[0]){
         case '/r':
         case '/R':
         case '/roll':
         case '/Roll':
-          message = "You rolled " + command[1] + " " + command[2] + "-sided dice.";
+          message = `You rolled ${command[1]} ${command[2]}-sided dice.`;
+          // "You rolled " + command[1] + " " + command[2] + "-sided dice.";
           for(var i = 0; i< parseInt(command[1]); i++){
             var result = (1 + Math.floor(Math.random()*parseInt(command[2])));
             message += result + " ";
@@ -75,9 +76,11 @@ var onMsg = function(socket) {
         case '/D':
         case '/date':
         case '/Date':
-          single = true;
-          message += "The date and the time are: \n";
-          message += dateTime.toLocaleString();
+          self = true;
+          message += `The date and the time are
+          ${dateTime.toLocaleString()}`;
+          // "The date and the time are: \n";
+          // message += dateTime.toLocaleString();
           break;
         case '/n':
         case '/N':
@@ -85,7 +88,7 @@ var onMsg = function(socket) {
         case '/Name':
             var newName = command [1];
             var oldName = socket.name;
-            message = oldName + " changes their name to " + newName + ".";
+            message =`${oldName} changes their name to ${newName}`;
             socket.name = newName;
           break;
         case '/m':
@@ -94,24 +97,35 @@ var onMsg = function(socket) {
         case '/Me':
           message += socket.name;
           for(var j =1;j<command.length;j++){
-            message += command[j];
+            message += `${command[j]} `;
           }
           break;
         case '/u':
         case '/U':
         case '/user':
         case '/User':
-          single = true;
+          self = true;
           for(var key in users){
             message += `${users[key]} `;
           }
           break;
+        case '/w':
+        case '/W':
+        case '/whisper':
+        case '/whisper':
+          for(var k =2;k<command.length;k++){
+            message += `${command[k]} `;
+          }
+          other = true;
+          break;
         default:
-          single = true;
+          self = true;
           message = "That is an invalid command";
       }
-      if(single){
+      if(self){
         socket.emit('msg', {name: 'server', msg: message});
+      }else if(other){
+          io.sockets.connected[command[1]].emit('msg',message);
       }else{
         io.sockets.in('room1').emit('msg',{
           name:socket.name,

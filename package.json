@@ -4,7 +4,6 @@
   "description": "Basic Socket.io based chat for first homework assignment",
   "main": "index.js",
   "scripts": {
-    "pretest": "jshint clientTest.js",
     "test": "jshint ./src/",
     "posttest": "echo complete",
     "start": "node src/server.js"

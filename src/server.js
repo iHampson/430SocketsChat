@@ -37,22 +37,21 @@ var onJoined = function(socket) {
     socket.name = data.name;
 
     socket.join('room1');
-    // updates the count of active users
-    users[data.name] = socket.name;
+    // Adds active users socket to users object
+    users[data.name] = socket;
 
     socket.broadcast.to('room1').emit('msg',{
       name:'server',
       msg: data.name + ' has joined the room.'
     });
     socket.emit('msg', {name:'server',msg:'You have joined the room'});
-    console.log(users);
+    console.log(`${data.name} has joined the room.`);
   });
 
 };
 
 var onMsg = function(socket) {
   socket.on('msgToServer',function(data){
-    console.log(data);
     if(data.msg[0] === '/'){
       var command = data.msg.split(" ");
       var dateTime = new Date();
@@ -66,7 +65,6 @@ var onMsg = function(socket) {
         case '/roll':
         case '/Roll':
           message = `You rolled ${command[1]} ${command[2]}-sided dice.`;
-          // "You rolled " + command[1] + " " + command[2] + "-sided dice.";
           for(var i = 0; i< parseInt(command[1]); i++){
             var result = (1 + Math.floor(Math.random()*parseInt(command[2])));
             message += result + " ";
@@ -79,8 +77,6 @@ var onMsg = function(socket) {
           self = true;
           message += `The date and the time are
           ${dateTime.toLocaleString()}`;
-          // "The date and the time are: \n";
-          // message += dateTime.toLocaleString();
           break;
         case '/n':
         case '/N':
@@ -88,6 +84,7 @@ var onMsg = function(socket) {
         case '/Name':
             var newName = command [1];
             var oldName = socket.name;
+            delete users[oldName];
             message =`${oldName} changes their name to ${newName}`;
             socket.name = newName;
           break;
@@ -125,7 +122,8 @@ var onMsg = function(socket) {
       if(self){
         socket.emit('msg', {name: 'server', msg: message});
       }else if(other){
-          io.sockets.connected[command[1]].emit('msg',message);
+          users[command[1]].emit('msg', {name:socket.name , msg: `${socket.name}: ${message}`});
+          socket.emit('msg', {name:socket.name , msg: `${socket.name} to ${command[1]}: ${message}`});
       }else{
         io.sockets.in('room1').emit('msg',{
           name:socket.name,
@@ -137,7 +135,7 @@ var onMsg = function(socket) {
     }else{
       io.sockets.in('room1').emit('msg',{
         name:socket.name,
-        msg:socket.name + ":" +data.msg
+        msg:`${socket.name}: ${data.msg}`
       });
     }
   });
